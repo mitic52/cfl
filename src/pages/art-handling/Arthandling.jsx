@@ -172,7 +172,7 @@ const Arthandling = () => {
           </div> */}
         </div>
       </div>
-      <div className="title-text-1">
+      <div className="title-text-handling">
         <div className="icon-wrap">
           <img src={handshake} />
         </div>

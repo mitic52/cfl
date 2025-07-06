@@ -82,7 +82,9 @@ const Layout = () => {
           </div>
         </div>
         <div className="separator" />
-        <p className="copyright">CFL art services • Copyright © 2025 All Rights Reserved</p>
+        <p className="copyright">
+          CFL art services <span>•</span> Copyright © 2025 All Rights Reserved
+        </p>
       </div>
     </>
   );

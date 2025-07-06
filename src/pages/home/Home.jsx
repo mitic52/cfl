@@ -166,7 +166,7 @@ const Home = () => {
               </div>
             </div>
           </div>
-          <Link to="/art-storage">
+          <Link to="/art-storage" className="view-more-benefits-link">
             <button className="view-more-benefits">
               See all benefits <img src={arrowright} />
             </button>

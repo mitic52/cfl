@@ -1,0 +1,391 @@
+section {
+  .hero-art-packing {
+    height: 100dvh;
+    overflow: hidden;
+
+    .bg-wrapper {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      left: 0;
+      top: 0;
+
+      &::after {
+        content: "";
+        display: flex;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(to right, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.4) 50%, rgba(0, 0, 0, 0.3) 100%);
+        // margin-top: -2rem;
+      }
+
+      &::before {
+        content: "";
+        display: flex;
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 2rem;
+        background: linear-gradient(to top, #0b0a06, #0b0a0600);
+        z-index: 2;
+      }
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        // margin-top: -2rem;
+      }
+    }
+
+    .text-wrapper {
+      position: absolute;
+      top: 52.5%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #fff;
+      width: 80%;
+      max-width: 1200px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+
+      @media screen and (max-width: 890px) {
+        width: 90%;
+      }
+
+      h1 {
+        font-size: 3.4rem;
+        line-height: 3.2rem;
+        margin-bottom: 1rem;
+        letter-spacing: -0.1rem;
+        text-align: center;
+        color: #e7e7e7;
+
+        @media screen and (max-width: 890px) {
+          font-size: 3rem;
+          line-height: 2.7rem;
+        }
+
+        @media screen and (max-width: 430px) {
+          font-size: 2.5rem;
+          line-height: 2.4rem;
+          margin-bottom: 0.5rem;
+        }
+      }
+
+      p {
+        font-size: 1.1rem;
+        margin-top: 0.5rem;
+        margin-bottom: 2.3rem;
+        opacity: 0.55;
+        width: 30rem;
+        text-align: center;
+
+        @media screen and (max-width: 565px) {
+          font-size: 1.05rem;
+          width: 25rem;
+        }
+        @media screen and (max-width: 565px) {
+          font-size: 1.05rem;
+          width: 92%;
+        }
+      }
+    }
+  }
+
+  .text-title-wrap-packing {
+    width: 100%;
+    height: auto;
+    padding: 7rem 0;
+    display: grid;
+    place-items: center;
+
+    .wrap {
+      width: 90%;
+      max-width: 600px;
+      text-align: center;
+
+      h1 {
+        font-size: 2.4rem;
+        word-wrap: nowrap;
+        margin-bottom: 1rem;
+        letter-spacing: -0.025rem;
+
+        @media screen and (max-width: 750px) {
+          font-size: 2.15rem;
+        }
+
+        span {
+          opacity: 0.3;
+        }
+      }
+
+      p {
+        font-size: 1.05rem;
+        letter-spacing: -0.025rem;
+        color: #dadada;
+        mix-blend-mode: difference;
+
+        @media screen and (max-width: 500px) {
+          font-size: 1rem;
+        }
+      }
+    }
+  }
+
+  .crate-specs {
+    width: 100%;
+    height: 75dvh;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    gap: 3rem;
+
+    .text-wrap {
+      width: 24rem;
+
+      @media screen and (max-width: 950px) {
+        transform: translateX(5rem);
+      }
+
+      @media screen and (max-width: 820px) {
+        transform: translateX(0);
+        width: 27rem;
+      }
+
+      @media screen and (max-width: 500px) {
+        width: 90%;
+      }
+
+      .title {
+        font-size: 2.3rem;
+        letter-spacing: -0.025rem;
+
+        @media screen and (max-width: 550px) {
+          font-size: 2.1rem;
+        }
+      }
+
+      .specs-list {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.25rem;
+        font-size: 1.1rem;
+        line-height: 1.2rem;
+        margin-top: 1rem;
+        font-variation-settings: "wght" 475;
+        color: #cdcdcd;
+
+        @media screen and (max-width: 450px) {
+          font-size: 1rem;
+        }
+
+        .wrap {
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+          align-items: center;
+          gap: 1rem;
+          cursor: default;
+
+          &:hover {
+            .icon {
+              background-color: #f5cb5c;
+
+              img {
+                opacity: 1;
+                filter: brightness(0.1);
+              }
+            }
+          }
+
+          .icon {
+            padding: 0.85rem;
+            background-color: #252525;
+            border-radius: 50%;
+            aspect-ratio: 1;
+            display: grid;
+            place-items: center;
+            transition: 0.15s;
+
+            img {
+              width: 1.8rem;
+              height: auto;
+              opacity: 0.85;
+              transition: 0.15s;
+
+              @media screen and (max-width: 620px) {
+                width: 1.5rem;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .crate-img {
+      width: 25rem;
+      height: auto;
+      z-index: -1;
+
+      @media screen and (max-width: 550px) {
+        width: 21rem;
+      }
+
+      @media screen and (max-width: 950px) {
+        transform: translateX(-5rem);
+        opacity: 0.6;
+      }
+
+      @media screen and (max-width: 820px) {
+        transform: translateX(0);
+        position: absolute;
+        z-index: -1;
+        opacity: 0.3;
+      }
+    }
+  }
+
+  .crate-types {
+    width: 100%;
+    height: 60dvh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    .title {
+      font-size: 2.3rem;
+      letter-spacing: -0.025rem;
+      position: relative;
+      mix-blend-mode: difference;
+      text-align: center;
+
+      @media screen and (max-width: 550px) {
+        font-size: 2.1rem;
+        line-height: 2.1rem;
+      }
+
+      @media screen and (max-width: 480px) {
+        width: 15rem;
+      }
+
+      &::before {
+        content: "";
+        display: flex;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        background: radial-gradient(ellipse at center, rgba(163, 163, 163, 0.303) 0%, rgba(255, 255, 255, 0) 100%);
+        filter: blur(20px);
+      }
+    }
+
+    .box {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      gap: 4rem;
+      padding: 1.5rem 2rem;
+      border: 0.2rem solid #7a7a7a41;
+      margin-top: 2rem;
+      border-radius: 0.5rem;
+
+      @media screen and (max-width: 520px) {
+        width: 93%;
+        gap: 1rem;
+        padding: 1rem 1.5rem;
+      }
+
+      .col {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 1.75rem;
+
+        .wrap {
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+          align-items: center;
+          gap: 0.5rem;
+          font-size: 1.1rem;
+          font-variation-settings: "wght" 550;
+          opacity: 0.8;
+          word-wrap: nowrap;
+
+          img {
+            width: 1.3rem;
+            height: auto;
+          }
+        }
+      }
+    }
+  }
+
+  .free-estimate-link {
+    width: 100%;
+    height: 60dvh;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    p {
+      font-size: 2rem;
+      line-height: 2rem;
+      font-variation-settings: "wght" 650;
+      width: 35rem;
+
+      @media screen and (max-width: 550px) {
+        width: 80%;
+        font-size: 1.8rem;
+        line-height: 1.8rem;
+      }
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    button {
+      background-color: #f5cc5cea;
+      outline: none;
+      border: none;
+      padding: 0.7rem 2.2rem;
+      margin-top: 1.5rem;
+      font-size: 1rem;
+      font-variation-settings: "wght" 700;
+      transition: 0.2s;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.75rem;
+
+      img {
+        width: 1.3rem;
+        height: auto;
+      }
+
+      @media screen and (max-width: 565px) {
+        padding: 0.7rem 2rem;
+      }
+
+      &:hover {
+        background-color: #f5cc5c;
+      }
+    }
+  }
+}
