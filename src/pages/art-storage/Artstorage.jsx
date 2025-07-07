@@ -29,10 +29,10 @@ const Artstorage = () => {
               Located just minutes from JFK Airport, our facility offers both secure fine art storage and a dedicated viewing space for collections.
               Designed with top-tier security in mind, the warehouse is monitored 24/7 and equipped with a state-of-the-art surveillance and
               protection system. <br />
-              <br />{" "}
+              <br />
               <span className="none-mobile">
                 Our in-house team includes experienced fine art handlers and a professional registrar to ensure expert care and accurate
-                documentation.{" "}
+                documentation.
               </span>
               A custom-built digital inventory system allows clients quick and seamless access to every item in their collection. We are fully
               committed to keeping your artwork safe, secure, and always accessible.

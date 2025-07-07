@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Outlet, Link } from "react-router-dom";
+import { Outlet, Link, useLocation } from "react-router-dom";
 import logo from "../assets/logo/logo.svg";
 import menu from "../assets/icons/menu.svg";
 import close from "../assets/icons/close.svg";
@@ -7,6 +7,11 @@ import "./style.scss";
 
 const Layout = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [location.pathname]);
 
   return (
     <>
@@ -35,7 +40,11 @@ const Layout = () => {
               <Link to="/transport">Transport</Link>
               <Link to="/art-storage">Art storage</Link>
               <Link to="/more-services">More services</Link>
+              <Link to="/about">About us</Link>
             </div>
+            <Link to="/contact">
+              <button className="contact-button">Contact us</button>
+            </Link>
             <div className="copyright">
               <div className="spearator" />
               <p>CFL art services Copyright © 2025 All Rights Reserved</p>
