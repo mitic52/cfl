@@ -64,6 +64,7 @@ section {
         line-height: 3.2rem;
         margin-bottom: 1rem;
         letter-spacing: -0.1rem;
+        font-variation-settings: 'wght' 650;
 
         @media screen and (max-width: 890px) {
           font-size: 3rem;
@@ -102,6 +103,7 @@ section {
         font-variation-settings: "wght" 700;
         transition: 0.2s;
         cursor: pointer;
+        color: #000;
 
         @media screen and (max-width: 565px) {
           padding: 0.7rem 2rem;
@@ -341,6 +343,7 @@ section {
         width: 25rem;
         line-height: 2.5rem;
         letter-spacing: -0.05rem;
+        font-variation-settings: 'wght' 650;
 
         @media screen and (max-width: 1050px) {
           font-size: 2.25rem;
@@ -501,6 +504,7 @@ section {
           justify-content: center;
           align-items: center;
           gap: 0.75rem;
+          color: #000;
 
           img {
             width: 1.3rem;
@@ -709,6 +713,7 @@ section {
         font-size: 3rem;
         mix-blend-mode: difference;
         color: #dddddd;
+        font-variation-settings: 'wght' 650;
 
         @media screen and (max-width: 700px) {
           font-size: 2.5rem;
@@ -744,6 +749,7 @@ section {
         justify-content: center;
         align-items: center;
         gap: 0.75rem;
+        color: #000;
 
         img {
           width: 1.3rem;

@@ -66,6 +66,7 @@ section {
         letter-spacing: -0.1rem;
         text-align: center;
         color: #e7e7e7;
+        font-variation-settings: 'wght' 650;
 
         @media screen and (max-width: 890px) {
           font-size: 3rem;
@@ -160,6 +161,7 @@ section {
         font-size: 1.05rem;
         margin-bottom: 0.85rem;
         font-variation-settings: "wght" 550;
+        list-style: inside;
       }
     }
   }
@@ -218,6 +220,7 @@ section {
           align-items: center;
           gap: .75rem;
           line-height: 2.2rem;
+          font-variation-settings: 'wght' 650;
 
           @media screen and (max-width: 440px) {
             font-size: 2rem;

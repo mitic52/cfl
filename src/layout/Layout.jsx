@@ -69,6 +69,7 @@ const Layout = () => {
               <Link className="marked" to="mailto:contact@cflartservices.com">
                 contact@cflartservices.com
               </Link>
+              <Link to="/contact">Make an enquiry</Link>
             </div>
           </div>
           <div className="wrap">

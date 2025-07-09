@@ -70,6 +70,7 @@ section {
         letter-spacing: -0.1rem;
         text-align: center;
         color: #e7e7e7;
+        font-variation-settings: "wght" 650;
 
         @media screen and (max-width: 890px) {
           font-size: 3rem;
@@ -162,6 +163,7 @@ section {
         font-size: 1.05rem;
         color: #e6e6e6;
         mix-blend-mode: difference;
+        font-variation-settings: "wght" 450;
 
         @media screen and (max-width: 890px) {
           font-size: 1rem;
@@ -226,6 +228,7 @@ section {
         font-size: 2.3rem;
         line-height: 2.3rem;
         letter-spacing: -0.025rem;
+        font-variation-settings: "wght" 650;
 
         @media screen and (max-width: 800px) {
           font-size: 2rem;
@@ -322,8 +325,9 @@ section {
         line-height: 2.1rem;
         letter-spacing: -0.025rem;
         margin-bottom: 1rem;
+        font-variation-settings: "wght" 650;
 
-        .breakpoint-mobile{
+        .breakpoint-mobile {
           display: none;
 
           @media screen and (max-width: 570px) {
@@ -341,16 +345,16 @@ section {
         }
       }
 
-      .scroll-container{
-        &::after{
-          content: '';
+      .scroll-container {
+        &::after {
+          content: "";
           display: flex;
           position: absolute;
           right: 0;
           top: 0;
           width: 5rem;
           height: 100%;
-          background: linear-gradient(to left, #0B0A06, #0b0a0676, #0b0a0600);
+          background: linear-gradient(to left, #0b0a06, #0b0a0676, #0b0a0600);
         }
       }
     }
@@ -393,6 +397,7 @@ section {
           color: #dbdbdb;
           font-size: 1.4rem;
           line-height: 1.5rem;
+          font-variation-settings: "wght" 550;
         }
 
         .description {
@@ -400,6 +405,7 @@ section {
           font-size: 1rem;
           line-height: 1.05rem;
           margin-top: 0.35rem;
+          font-variation-settings: "wght" 450;
         }
       }
     }
