@@ -10,9 +10,16 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@heroui/checkbox": "^2.3.21",
+    "@heroui/date-input": "^2.3.21",
+    "@heroui/date-picker": "^2.3.22",
     "@heroui/input": "^2.4.22",
+    "@heroui/radio": "^2.3.21",
     "@heroui/react": "^2.7.11",
+    "@heroui/select": "^2.4.22",
     "framer-motion": "^12.23.0",
+    "jspdf": "^3.0.1",
+    "jspdf-autotable": "^5.0.2",
     "motion": "^12.23.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",

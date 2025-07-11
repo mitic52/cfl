@@ -38,7 +38,7 @@ const Contact = () => {
 
     console.log(obj);
 
-    fetch("https://cfsl-app.vercel.app/enquiry", {
+    fetch("https://cflas-app.vercel.app/enquiry", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
