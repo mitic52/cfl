@@ -12,6 +12,8 @@ import "./style.scss";
 import { useState } from "react";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import { Ring } from "ldrs/react";
+import "ldrs/react/Ring.css";
 
 const typeofart = [
   { key: "painting", label: "Painting" },
@@ -93,9 +95,8 @@ const calculateEstimate = () => {
     return;
   }
 
-  // Create PDF
   const doc = new jsPDF();
-  doc.setFontSize(18);
+  doc.setFontSize(14);
   doc.text("Table of Inventory", 14, 20);
 
   autoTable(doc, {
@@ -107,8 +108,9 @@ const calculateEstimate = () => {
   doc.text(`Total items: ${totalItems}`, 14, doc.lastAutoTable.finalY + 10);
   doc.text(`Estimated weight: ${totalWeight} kg`, 14, doc.lastAutoTable.finalY + 20);
   doc.text(`Total volume: ${totalVolume.toLocaleString()} cubic cm`, 14, doc.lastAutoTable.finalY + 30);
+  doc.text(``, 14, doc.lastAutoTable.finalY + 40);
+  doc.text(`Date: ${new Date().toLocaleString()}`, 14, doc.lastAutoTable.finalY + 50);
 
-  // Create download link
   const pdfBlob = doc.output("blob");
   const url = URL.createObjectURL(pdfBlob);
   const link = document.createElement("a");
@@ -185,253 +187,327 @@ const Estimate = () => {
     setInventory((prev) => prev.filter((id) => id !== idToRemove));
   };
 
-  const validateAndCollectData = () => {
+  // const validateAndCollectData = () => {
+  //   const formData = {
+  //     customerInfo: {},
+  //     transportation: {
+  //       isRequired: false,
+  //       pickupLocation: {},
+  //       deliveryLocation: {},
+  //       extraStop: {
+  //         isRequired: false,
+  //         location: {},
+  //       },
+  //       schedule: {},
+  //       insurance: {},
+  //     },
+  //     services: [],
+  //     inventory: [],
+  //     storageInsurance: {},
+  //     uploadedFile: null,
+  //   };
+
+  //   let firstInvalid = null;
+
+  //   document.querySelectorAll(".input-error").forEach((el) => el.classList.remove("input-error"));
+
+  //   const isElementVisible = (element) => {
+  //     const rect = element.getBoundingClientRect();
+  //     const style = window.getComputedStyle(element);
+  //     return rect.width > 0 && rect.height > 0 && style.display !== "none" && style.visibility !== "hidden" && style.opacity !== "0";
+  //   };
+
+  //   const labelToKey = (label) =>
+  //     label
+  //       .toLowerCase()
+  //       .replace(/[^a-z0-9]+/g, " ")
+  //       .trim()
+  //       .replace(/\s+/g, "_");
+
+  //   const validateField = (field, section = null) => {
+  //     if (field.type === "hidden" || field.type === "file" || field.type === "radio") return;
+  //     if (!isElementVisible(field)) return;
+
+  //     const wrapper = field.closest("[data-slot='base']") || field.closest(".flex") || field.parentElement;
+  //     const label = wrapper?.querySelector("label")?.textContent?.trim();
+  //     const isRequired =
+  //       field.hasAttribute("required") || field.getAttribute("aria-required") === "true" || wrapper?.querySelector("[aria-required='true']");
+
+  //     if (isRequired && !field.value.trim()) {
+  //       field.classList.add("input-error");
+  //       if (!firstInvalid) firstInvalid = field;
+  //       return false;
+  //     } else if (field.value.trim() && label) {
+  //       const key = labelToKey(label);
+  //       if (section) section[key] = field.value.trim();
+  //     }
+
+  //     return true;
+  //   };
+
+  //   const getAllRadioSelections = (container, targetObject) => {
+  //     const groups = container.querySelectorAll('[role="radiogroup"]');
+  //     groups.forEach((group) => {
+  //       const legend = group.querySelector("legend")?.textContent?.trim();
+  //       const selected = group.querySelector('input[type="radio"]:checked');
+  //       if (legend && selected) {
+  //         const key = labelToKey(legend);
+  //         targetObject[key] = selected.value;
+  //       }
+  //     });
+  //   };
+
+  //   // Customer Info
+  //   const customerSection = document.querySelector(".customer-info-title").parentElement;
+  //   const customerInputs = customerSection.querySelectorAll('input[type="text"], input[type="email"]');
+  //   customerInputs.forEach((input) => {
+  //     if (input.closest(".transport-wrapper")) return;
+  //     validateField(input, formData.customerInfo);
+  //   });
+  //   getAllRadioSelections(customerSection, formData.customerInfo);
+
+  //   // Transport radio
+  //   const transportRadioGroup = document.querySelector('[role="radiogroup"]');
+  //   if (transportRadioGroup) {
+  //     const selected = transportRadioGroup.querySelector('input[type="radio"]:checked');
+  //     if (selected) formData.transportation.isRequired = selected.value === "true";
+  //   }
+
+  //   if (formData.transportation.isRequired) {
+  //     const transportWrapper = document.querySelector(".transport-wrapper");
+
+  //     // Pickup
+  //     const pickupSection = transportWrapper.querySelector(".pickup-title");
+  //     if (pickupSection) {
+  //       let current = pickupSection.nextElementSibling;
+  //       const inputs = [];
+  //       while (current && !current.classList.contains("separator")) {
+  //         if (current.tagName === "DIV" && current.classList.contains("flex")) inputs.push(...current.querySelectorAll("input"));
+  //         current = current.nextElementSibling;
+  //       }
+  //       inputs.forEach((input) => validateField(input, formData.transportation.pickupLocation));
+  //       getAllRadioSelections(pickupSection.parentElement, formData.transportation.pickupLocation);
+  //     }
+
+  //     // Delivery
+  //     const deliveryTitles = transportWrapper.querySelectorAll(".pickup-title");
+  //     const deliverySection = deliveryTitles[1];
+  //     if (deliverySection) {
+  //       let current = deliverySection.nextElementSibling;
+  //       const inputs = [];
+  //       while (current && !current.classList.contains("separator")) {
+  //         if (current.tagName === "DIV" && current.classList.contains("flex")) inputs.push(...current.querySelectorAll("input"));
+  //         current = current.nextElementSibling;
+  //       }
+  //       inputs.forEach((input) => validateField(input, formData.transportation.deliveryLocation));
+  //       getAllRadioSelections(deliverySection.parentElement, formData.transportation.deliveryLocation);
+  //     }
+
+  //     // Extra stop
+  //     const stopGroup = [...transportWrapper.querySelectorAll('[role="radiogroup"]')].find((group) =>
+  //       group.querySelector("legend")?.textContent?.toLowerCase().includes("other stops")
+  //     );
+  //     if (stopGroup) {
+  //       const selected = stopGroup.querySelector('input[type="radio"]:checked');
+  //       if (selected?.value === "true") {
+  //         formData.transportation.extraStop.isRequired = true;
+  //         const stopSection = document.querySelector(".extra-stop");
+  //         const inputs = stopSection.querySelectorAll("input");
+  //         inputs.forEach((input) => validateField(input, formData.transportation.extraStop.location));
+  //         getAllRadioSelections(stopSection, formData.transportation.extraStop.location);
+  //       }
+  //     }
+
+  //     // Schedule
+  //     const dateInputs = transportWrapper.querySelectorAll('input[type="date"], input[aria-label*="date"]');
+  //     dateInputs.forEach((input) => {
+  //       if (isElementVisible(input)) {
+  //         const label = input.closest("[data-slot='base']")?.querySelector("label")?.textContent?.trim();
+  //         if (label) formData.transportation.schedule[labelToKey(label)] = input.value;
+  //       }
+  //     });
+
+  //     const timeInputs = transportWrapper.querySelectorAll('input[type="time"], input[aria-label*="time"]');
+  //     timeInputs.forEach((input, index) => {
+  //       if (!formData.transportation.schedule.operatingHours) formData.transportation.schedule.operatingHours = {};
+  //       if (index === 0) formData.transportation.schedule.operatingHours.start = input.value;
+  //       else formData.transportation.schedule.operatingHours.end = input.value;
+  //     });
+
+  //     // Transit insurance
+  //     const insuranceGroup = [...transportWrapper.querySelectorAll('[role="radiogroup"]')].find((group) =>
+  //       group.querySelector("legend")?.textContent?.toLowerCase().includes("transit insurance")
+  //     );
+  //     if (insuranceGroup) {
+  //       const selected = insuranceGroup.querySelector('input[type="radio"]:checked');
+  //       if (selected) {
+  //         formData.transportation.insurance.isRequired = selected.value === "true";
+  //         if (formData.transportation.insurance.isRequired) {
+  //           const input = transportWrapper.querySelector('input[type="number"]');
+  //           if (input && isElementVisible(input)) formData.transportation.insurance.declaredValue = input.value;
+  //         }
+  //       }
+  //     }
+  //   }
+
+  //   // Services
+  //   const checkboxes = document.querySelectorAll('[role="group"] input[type="checkbox"]:checked');
+  //   formData.services = Array.from(checkboxes).map((cb) => ({
+  //     value: cb.value,
+  //     label: cb.nextElementSibling?.textContent?.trim(),
+  //   }));
+
+  //   // Inventory
+  //   const inventoryElements = document.querySelectorAll(".inventory-wrap");
+  //   inventoryElements.forEach((element) => {
+  //     const selects = element.querySelectorAll("select");
+  //     const inputs = element.querySelectorAll("input");
+  //     const textarea = element.querySelector("textarea");
+
+  //     const inventoryItem = {
+  //       type: selects[0]?.value || "",
+  //       medium: selects[1]?.value || "",
+  //       quantity: inputs[0]?.value || "",
+  //       dimensions: {
+  //         width: inputs[1]?.value || "",
+  //         length: inputs[2]?.value || "",
+  //         height: inputs[3]?.value || "",
+  //       },
+  //       weight: inputs[4]?.value || "",
+  //       description: textarea?.value || "",
+  //     };
+
+  //     if (inventoryItem.type || inventoryItem.medium || inventoryItem.quantity) formData.inventory.push(inventoryItem);
+  //   });
+
+  //   // Storage insurance
+  //   const allGroups = document.querySelectorAll('[role="radiogroup"]');
+  //   const storageGroup = [...allGroups].find((group) => group.querySelector("legend")?.textContent?.toLowerCase().includes("storage insurance"));
+  //   if (storageGroup) {
+  //     const selected = storageGroup.querySelector('input[type="radio"]:checked');
+  //     if (selected) {
+  //       formData.storageInsurance.isRequired = selected.value === "true";
+  //       if (formData.storageInsurance.isRequired) {
+  //         const block = storageGroup.closest("div").parentElement.querySelector('div[style*="block"]');
+  //         const input = block?.querySelector('input[type="number"]');
+  //         if (input && isElementVisible(input)) formData.storageInsurance.declaredValue = input.value;
+  //       }
+  //     }
+  //   }
+
+  //   // File
+  //   if (file) formData.uploadedFile = file;
+
+  //   if (firstInvalid) {
+  //     firstInvalid.scrollIntoView({ behavior: "smooth", block: "center" });
+  //     setTimeout(() => firstInvalid.focus(), 300);
+  //     return null;
+  //   }
+
+  //   return formData;
+  // };
+
+  const [pickupThisIs, setPickupThisIs] = useState("");
+  const [pickupTypeOfBuilding, setPickupTypeOfBuilding] = useState("");
+  const [pickupLoadingDock, setPickupLoadingDock] = useState("");
+  const [pickupParkingOnSide, setPickupParkingOnSide] = useState("");
+
+  const [deliveryThisIs, setDeliveryThisIs] = useState("");
+  const [deliveryTypeOfBuilding, setDeliveryTypeOfBuilding] = useState("");
+
+  const [extrastopThisIs, setExtrastopThisIs] = useState("");
+  const [extrastopTypeOfBuilding, setExtrastopTypeOfBuilding] = useState("");
+
+  const [datePickupAvailable, setDatePickupAvailable] = useState("");
+  const [dateDeadline, setDateDeadline] = useState("");
+
+  const [startOperatingHours, setStartOperatingHours] = useState("");
+  const [endOperatingHours, setEndOperatingHours] = useState("");
+
+  const [additionalServices, setAdditionalServices] = useState("");
+
+  const validateAndCollectData = async () => {
     const formData = {
-      customerInfo: {},
-      transportation: {
-        isRequired: false,
-        pickupLocation: {},
-        deliveryLocation: {},
-        extraStop: {
-          isRequired: false,
-          location: {},
-        },
-        schedule: {},
-        insurance: {},
-      },
-      services: [],
-      inventory: [],
-      storageInsurance: {},
+      clientsInfo: {},
       uploadedFile: null,
     };
 
-    let firstInvalid = null;
+    formData.clientsInfo.name = document.querySelector(".client-name").querySelector("input").value;
+    formData.clientsInfo.surname = document.querySelector(".client-surname").querySelector("input").value;
+    formData.clientsInfo.company = document.querySelector(".client-company-org").querySelector("input").value;
+    formData.clientsInfo.company = document.querySelector(".client-company-org").querySelector("input").value;
+    formData.clientsInfo.streetAddress = document.querySelector(".client-street-address").querySelector("input").value;
+    formData.clientsInfo.city = document.querySelector(".client-city").querySelector("input").value;
+    formData.clientsInfo.state = document.querySelector(".client-state").querySelector("input").value;
+    formData.clientsInfo.apt = document.querySelector(".client-apt").querySelector("input").value;
+    formData.clientsInfo.zip = document.querySelector(".client-zip").querySelector("input").value;
+    formData.clientsInfo.phone = document.querySelector(".client-phone").querySelector("input").value;
+    formData.clientsInfo.email = document.querySelector(".client-email").querySelector("input").value;
+    formData.clientsInfo.fax = document.querySelector(".client-fax").querySelector("input").value;
 
-    // Clear previous errors
-    document.querySelectorAll(".input-error").forEach((el) => el.classList.remove("input-error"));
+    formData.transportRequired = selectedTransport;
 
-    // Helper function to check if element is visible
-    const isElementVisible = (element) => {
-      const rect = element.getBoundingClientRect();
-      const style = window.getComputedStyle(element);
-      return rect.width > 0 && rect.height > 0 && style.display !== "none" && style.visibility !== "hidden" && style.opacity !== "0";
-    };
+    if (selectedTransport == "true") {
+      formData.transport = {};
+      formData.transport.pickup = {};
+      formData.transport.delivery = {};
 
-    // Helper function to validate and collect field data
-    const validateField = (field, section = null) => {
-      if (field.type === "hidden" || field.type === "file" || field.type === "radio") return;
-      if (!isElementVisible(field)) return;
+      formData.transport.pickup.streetAddress = document.querySelector(".pickup-street-address").querySelector("input").value;
+      formData.transport.pickup.city = document.querySelector(".pickup-city").querySelector("input").value;
+      formData.transport.pickup.streetAddress2 = document.querySelector(".pickup-street-address-2").querySelector("input").value;
+      formData.transport.pickup.state = document.querySelector(".pickup-state").querySelector("input").value;
+      formData.transport.pickup.zip = document.querySelector(".pickup-zip").querySelector("input").value;
+      formData.transport.pickup.thisis = pickupThisIs;
+      formData.transport.pickup.typeofbuilding = pickupTypeOfBuilding;
+      formData.transport.pickup.loadingdock = pickupLoadingDock;
+      formData.transport.pickup.parkingonside = pickupParkingOnSide;
 
-      const wrapper = field.closest("[data-slot='base']") || field.closest(".flex") || field.parentElement;
-      const label = wrapper?.querySelector("label")?.textContent?.trim();
-      const isRequired =
-        field.hasAttribute("required") || field.getAttribute("aria-required") === "true" || wrapper?.querySelector("[aria-required='true']");
+      formData.transport.delivery.streetAddress = document.querySelector(".delivery-street-address").querySelector("input").value;
+      formData.transport.delivery.city = document.querySelector(".delivery-city").querySelector("input").value;
+      formData.transport.delivery.streetAddress2 = document.querySelector(".delivery-street-address-2").querySelector("input").value;
+      formData.transport.delivery.state = document.querySelector(".delivery-state").querySelector("input").value;
+      formData.transport.delivery.zip = document.querySelector(".delivery-zip").querySelector("input").value;
+      formData.transport.delivery.thisis = deliveryThisIs;
+      formData.transport.delivery.typeofbuilding = deliveryTypeOfBuilding;
 
-      if (isRequired && !field.value.trim()) {
-        field.classList.add("input-error");
-        if (!firstInvalid) firstInvalid = field;
-        return false;
-      } else if (field.value.trim() && label) {
-        const key = labelToKey(label);
-        if (section) {
-          section[key] = field.value.trim();
-        }
-        return true;
-      }
-      return true;
-    };
+      formData.transport.extraStopRequired = selectedExtraStop;
 
-    // Collect Customer Info
-    const customerSection = document.querySelector(".customer-info-title").parentElement;
-    const customerInputs = customerSection.querySelectorAll('input[type="text"], input[type="email"]');
-    customerInputs.forEach((input) => {
-      if (input.closest(".transport-wrapper")) return; // Skip transport fields
-      validateField(input, formData.customerInfo);
-    });
+      if (selectedExtraStop == "true") {
+        formData.transport.extrastop = {};
 
-    // Handle Transportation Radio Group
-    const transportRadioGroup = document.querySelector('[role="radiogroup"]');
-    if (transportRadioGroup) {
-      const selectedTransport = transportRadioGroup.querySelector('input[type="radio"]:checked');
-      if (selectedTransport) {
-        formData.transportation.isRequired = selectedTransport.value === "true";
-      }
-    }
-
-    // If transportation is required, collect transportation data
-    if (formData.transportation.isRequired) {
-      const transportWrapper = document.querySelector(".transport-wrapper");
-
-      // Pickup Location
-      const pickupSection = transportWrapper.querySelector(".pickup-title");
-      if (pickupSection) {
-        const pickupInputs = [];
-        let currentElement = pickupSection.nextElementSibling;
-
-        while (currentElement && !currentElement.classList.contains("separator")) {
-          if (currentElement.tagName === "DIV" && currentElement.classList.contains("flex")) {
-            pickupInputs.push(...currentElement.querySelectorAll("input"));
-          } else if (currentElement.tagName === "INPUT") {
-            pickupInputs.push(currentElement);
-          } else if (currentElement.getAttribute("role") === "radiogroup") {
-            const selectedRadio = currentElement.querySelector('input[type="radio"]:checked');
-            if (selectedRadio) {
-              const legend = currentElement.querySelector("legend");
-              if (legend) {
-                const key = labelToKey(legend.textContent.trim());
-                formData.transportation.pickupLocation[key] = selectedRadio.value;
-              }
-            }
-          }
-          currentElement = currentElement.nextElementSibling;
-        }
-
-        pickupInputs.forEach((input) => validateField(input, formData.transportation.pickupLocation));
+        formData.transport.extrastop.streetAddress = document.querySelector(".extrastop-street-address").querySelector("input").value;
+        formData.transport.extrastop.city = document.querySelector(".extrastop-city").querySelector("input").value;
+        formData.transport.extrastop.streetAddress2 = document.querySelector(".extrastop-street-address-2").querySelector("input").value;
+        formData.transport.extrastop.state = document.querySelector(".extrastop-state").querySelector("input").value;
+        formData.transport.extrastop.zip = document.querySelector(".extrastop-zip").querySelector("input").value;
+        formData.transport.extrastop.thisis = extrastopThisIs;
+        formData.transport.extrastop.typeofbuilding = extrastopTypeOfBuilding;
       }
 
-      // Delivery Location
-      const deliveryTitles = transportWrapper.querySelectorAll(".pickup-title");
-      const deliverySection = deliveryTitles[1]; // Second title is delivery
-      if (deliverySection) {
-        const deliveryInputs = [];
-        let currentElement = deliverySection.nextElementSibling;
+      formData.transport.datepickup = datePickupAvailable;
+      formData.transport.datedelivery = dateDeadline;
 
-        while (currentElement && !currentElement.classList.contains("separator")) {
-          if (currentElement.tagName === "DIV" && currentElement.classList.contains("flex")) {
-            deliveryInputs.push(...currentElement.querySelectorAll("input"));
-          } else if (currentElement.tagName === "INPUT") {
-            deliveryInputs.push(currentElement);
-          } else if (currentElement.getAttribute("role") === "radiogroup") {
-            const selectedRadio = currentElement.querySelector('input[type="radio"]:checked');
-            if (selectedRadio) {
-              const legend = currentElement.querySelector("legend");
-              if (legend) {
-                const key = labelToKey(legend.textContent.trim());
-                formData.transportation.deliveryLocation[key] = selectedRadio.value;
-              }
-            }
-          }
-          currentElement = currentElement.nextElementSibling;
-        }
+      formData.transport.specificoperatehours = selectedOperatingHours;
 
-        deliveryInputs.forEach((input) => validateField(input, formData.transportation.deliveryLocation));
+      if (selectedOperatingHours) {
+        formData.transport.operatinghours = {};
+        console.log(startOperatingHours, endOperatingHours);
+        formData.transport.operatinghours.start = startOperatingHours;
+        formData.transport.operatinghours.end = endOperatingHours;
       }
 
-      // Extra Stop
-      const extraStopRadioGroups = transportWrapper.querySelectorAll('[role="radiogroup"]');
-      let extraStopRadioGroup = null;
-
-      extraStopRadioGroups.forEach((group) => {
-        const legend = group.querySelector("legend");
-        if (legend && legend.textContent.toLowerCase().includes("other stops")) {
-          extraStopRadioGroup = group;
-        }
-      });
-
-      if (extraStopRadioGroup) {
-        const selectedExtraStop = extraStopRadioGroup.querySelector('input[type="radio"]:checked');
-        if (selectedExtraStop) {
-          formData.transportation.extraStop.isRequired = selectedExtraStop.value === "true";
-
-          if (formData.transportation.extraStop.isRequired) {
-            const extraStopSection = document.querySelector(".extra-stop");
-            if (extraStopSection && isElementVisible(extraStopSection)) {
-              const extraStopInputs = extraStopSection.querySelectorAll("input");
-              extraStopInputs.forEach((input) => validateField(input, formData.transportation.extraStop.location));
-
-              const extraStopRadios = extraStopSection.querySelectorAll('[role="radiogroup"]');
-              extraStopRadios.forEach((radioGroup) => {
-                const selectedRadio = radioGroup.querySelector('input[type="radio"]:checked');
-                if (selectedRadio) {
-                  const legend = radioGroup.querySelector("legend");
-                  if (legend) {
-                    const key = labelToKey(legend.textContent.trim());
-                    formData.transportation.extraStop.location[key] = selectedRadio.value;
-                  }
-                }
-              });
-            }
-          }
-        }
-      }
-
-      // Schedule (Dates and Times)
-      const datePickers = transportWrapper.querySelectorAll('input[type="date"], input[aria-label*="date"], input[placeholder*="date"]');
-      datePickers.forEach((dateInput) => {
-        if (isElementVisible(dateInput)) {
-          const wrapper = dateInput.closest("[data-slot='base']") || dateInput.parentElement;
-          const label = wrapper?.querySelector("label")?.textContent?.trim();
-          if (label) {
-            const key = labelToKey(label);
-            formData.transportation.schedule[key] = dateInput.value;
-          }
-        }
-      });
-
-      const timeInputs = transportWrapper.querySelectorAll('input[type="time"], input[aria-label*="time"], input[placeholder*="time"]');
-      timeInputs.forEach((timeInput) => {
-        if (isElementVisible(timeInput)) {
-          const wrapper = timeInput.closest("[data-slot='base']") || timeInput.parentElement;
-          const label = wrapper?.querySelector("label")?.textContent?.trim();
-          if (label) {
-            const key = labelToKey(label);
-            if (!formData.transportation.schedule.operatingHours) {
-              formData.transportation.schedule.operatingHours = {};
-            }
-
-            // Determine if it's start or end time based on position
-            const timeContainer = timeInput.closest('div[style*="flex"]');
-            const timeInputs = timeContainer?.querySelectorAll('input[type="time"]');
-            const index = Array.from(timeInputs || []).indexOf(timeInput);
-
-            if (index === 0) {
-              formData.transportation.schedule.operatingHours.start = timeInput.value;
-            } else if (index === 1) {
-              formData.transportation.schedule.operatingHours.end = timeInput.value;
-            }
-          }
-        }
-      });
-
-      // Transportation Insurance
-      const transportRadioGroups = transportWrapper.querySelectorAll('[role="radiogroup"]');
-      let transportInsuranceRadio = null;
-
-      transportRadioGroups.forEach((group) => {
-        const legend = group.querySelector("legend");
-        if (legend && legend.textContent.toLowerCase().includes("transit insurance")) {
-          transportInsuranceRadio = group;
-        }
-      });
-
-      if (transportInsuranceRadio) {
-        const selectedInsurance = transportInsuranceRadio.querySelector('input[type="radio"]:checked');
-        if (selectedInsurance) {
-          formData.transportation.insurance.isRequired = selectedInsurance.value === "true";
-
-          if (formData.transportation.insurance.isRequired) {
-            const declaredValueInput = transportWrapper.querySelector('input[type="number"]');
-            if (declaredValueInput && isElementVisible(declaredValueInput)) {
-              formData.transportation.insurance.declaredValue = declaredValueInput.value;
-            }
-          }
-        }
+      formData.transport.transitInsurance = selectedTransportInsurance;
+      if (selectedTransportInsurance == "true") {
+        formData.transport.declaredTransitValue = document.querySelector(".declaredvalue-transit").querySelector("input").value;
       }
     }
 
-    // Collect Services (Checkboxes)
-    const serviceCheckboxGroup = document.querySelector('[role="group"]');
-    if (serviceCheckboxGroup) {
-      const selectedServices = serviceCheckboxGroup.querySelectorAll('input[type="checkbox"]:checked');
-      formData.services = Array.from(selectedServices).map((checkbox) => ({
-        value: checkbox.value,
-        label: checkbox.nextElementSibling?.textContent?.trim(),
-      }));
-    }
+    formData.services = additionalServices;
 
-    // Collect Inventory Data
+    formData.inventory = [];
+
     const inventoryElements = document.querySelectorAll(".inventory-wrap");
-    inventoryElements.forEach((element, index) => {
+    inventoryElements.forEach((element) => {
       const selects = element.querySelectorAll("select");
       const inputs = element.querySelectorAll("input");
       const textarea = element.querySelector("textarea");
@@ -449,71 +525,67 @@ const Estimate = () => {
         description: textarea?.value || "",
       };
 
-      // Only add if at least some fields are filled
-      if (inventoryItem.type || inventoryItem.medium || inventoryItem.quantity) {
-        formData.inventory.push(inventoryItem);
-      }
+      if (inventoryItem.type || inventoryItem.medium || inventoryItem.quantity) formData.inventory.push(inventoryItem);
     });
 
-    // Storage Insurance
-    const allRadioGroups = document.querySelectorAll('[role="radiogroup"]');
-    let storageInsuranceRadio = null;
-
-    allRadioGroups.forEach((group) => {
-      const legend = group.querySelector("legend");
-      if (legend && legend.textContent.toLowerCase().includes("storage insurance")) {
-        storageInsuranceRadio = group;
-      }
-    });
-
-    if (storageInsuranceRadio) {
-      const selectedStorageInsurance = storageInsuranceRadio.querySelector('input[type="radio"]:checked');
-      if (selectedStorageInsurance) {
-        formData.storageInsurance.isRequired = selectedStorageInsurance.value === "true";
-
-        if (formData.storageInsurance.isRequired) {
-          // Find the storage insurance declared value input (should be after the storage insurance radio group)
-          let currentElement = storageInsuranceRadio.nextElementSibling;
-          while (currentElement) {
-            const storageValueInput = currentElement.querySelector('input[type="number"]');
-            if (storageValueInput && isElementVisible(storageValueInput)) {
-              formData.storageInsurance.declaredValue = storageValueInput.value;
-              break;
-            }
-            currentElement = currentElement.nextElementSibling;
-          }
-        }
-      }
+    formData.storageInsurance = selectedStorageInsurance;
+    if (selectedStorageInsurance == "true") {
+      formData.declaredStorageValue = document.querySelector(".declaredvalue-storage").querySelector("input").value;
     }
 
-    // File Upload
     if (file) {
-      formData.uploadedFile = {
-        name: file.name,
-        size: file.size,
-        type: file.type,
-      };
+      formData.uploadedFile = file;
     }
 
-    // Scroll to first invalid field if any
-    if (firstInvalid) {
-      firstInvalid.scrollIntoView({ behavior: "smooth", block: "center" });
+    const fullFormData = new FormData();
+
+    fullFormData.append("data", JSON.stringify(formData));
+
+    const fileInput = document.querySelector(".fileinputfield");
+    if (fileInput.files.length > 0) {
+      fullFormData.append("file", fileInput.files[0]);
+    }
+
+    try {
+      document.querySelector(".submitFormBtn").style.display = "none";
+      document.querySelector(".loader-circle").style.display = "block";
       setTimeout(() => {
-        firstInvalid.focus();
-      }, 300);
-      return null;
-    }
+        document.querySelector(".loader-circle").style.display = "none";
+        document.querySelector(".form-submitted-text").style.display = "block";
+      }, 1500);
 
-    return formData;
+      const response = await fetch("https://cflas-app.vercel.app/estimate", {
+        method: "POST",
+        body: fullFormData,
+      });
+
+      const result = await response.json();
+      console.log(result);
+    } catch (err) {
+      console.error("Error sending form data", err);
+    }
   };
 
-  // Helper function remains the same
   const labelToKey = (label) =>
     label
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, " ")
       .trim()
       .replace(/\s+/g, "_");
+
+  function formatTime(hours, minutes) {
+    hours = parseInt(hours, 10);
+    minutes = parseInt(minutes, 10);
+
+    const ampm = hours >= 12 ? "pm" : "am";
+    let hour12 = hours % 12;
+    if (hour12 === 0) hour12 = 12;
+
+    const paddedHours = hour12.toString().padStart(2, "0");
+    const paddedMinutes = minutes.toString().padStart(2, "0");
+
+    return `${paddedHours}:${paddedMinutes} ${ampm}`;
+  }
 
   return (
     <section>
@@ -524,25 +596,25 @@ const Estimate = () => {
         <div className="innerWrap">
           <h1 className="customer-info-title">Customer's info</h1>
           <div className="flex w-full flex-wrap md:flex-nowrap gap-4">
-            <Input label="Name" type="text" isRequired />
-            <Input label="Surname" type="text" isRequired />
+            <Input label="Name" type="text" isRequired className="client-name" />
+            <Input label="Surname" type="text" isRequired className="client-surname" />
           </div>
-          <Input label="Company name / Organization" type="text" isRequired />
+          <Input label="Company name / Organization" type="text" isRequired className="client-company-org" />
           <div className="flex w-full flex-wrap md:flex-nowrap gap-4">
-            <Input label="Street address" type="text" isRequired />
-            <Input label="City" type="text" isRequired />
-          </div>
-          <div className="flex w-full flex-wrap md:flex-nowrap gap-4">
-            <Input label="State" type="text" isRequired />
-            <Input label="Apt, Room, Office (optional)" type="text" />
+            <Input label="Street address" type="text" isRequired className="client-street-address" />
+            <Input label="City" type="text" isRequired className="client-city" />
           </div>
           <div className="flex w-full flex-wrap md:flex-nowrap gap-4">
-            <Input label="ZIP code" type="text" isRequired />
-            <Input label="Phone number" type="text" isRequired />
+            <Input label="State" type="text" isRequired className="client-state" />
+            <Input label="Apt, Room, Office (optional)" type="text" className="client-apt" />
           </div>
           <div className="flex w-full flex-wrap md:flex-nowrap gap-4">
-            <Input label="Email" type="email" isRequired />
-            <Input label="Fax (optional)" type="text" />
+            <Input label="ZIP code" type="text" isRequired className="client-zip" />
+            <Input label="Phone number" type="text" isRequired className="client-phone" />
+          </div>
+          <div className="flex w-full flex-wrap md:flex-nowrap gap-4">
+            <Input label="Email" type="email" isRequired className="client-email" />
+            <Input label="Fax (optional)" type="text" className="client-fax" />
           </div>
           <div className="separator" />
           <RadioGroup
@@ -559,52 +631,82 @@ const Estimate = () => {
             <div className="separator" />
             <h1 className="pickup-title">Pick-up Location</h1>
             <div className="flex w-full flex-wrap md:flex-nowrap gap-4">
-              <Input label="Street address" type="text" isRequired={selectedTransport === "true"} />
-              <Input label="City" type="text" isRequired={selectedTransport === "true"} />
+              <Input label="Street address" type="text" isRequired={selectedTransport === "true"} className="pickup-street-address" />
+              <Input label="City" type="text" isRequired={selectedTransport === "true"} className="pickup-city" />
             </div>
             <div className="flex w-full flex-wrap md:flex-nowrap gap-4">
-              <Input label="Street address 2" type="text" />
-              <Input label="State" type="text" isRequired={selectedTransport === "true"} />
+              <Input label="Street address 2" type="text" className="pickup-street-address-2" />
+              <Input label="State" type="text" isRequired={selectedTransport === "true"} className="pickup-state" />
             </div>
-            <Input label="ZIP code" type="text" isRequired={selectedTransport === "true"} />
-            <RadioGroup label="This is a:" isRequired={selectedTransport === "true"}>
-              <Radio value="1">Residence</Radio>
-              <Radio value="2">Commercial/Office</Radio>
-              <Radio value="3">Warehouse</Radio>
+            <Input label="ZIP code" type="text" isRequired={selectedTransport === "true"} className="pickup-zip" />
+            <RadioGroup
+              label="This is a:"
+              isRequired={selectedTransport === "true"}
+              value={pickupThisIs}
+              onChange={(e) => setPickupThisIs(e.target.value)}
+            >
+              <Radio value="Residence">Residence</Radio>
+              <Radio value="Commercial/Office">Commercial/Office</Radio>
+              <Radio value="Warehouse">Warehouse</Radio>
             </RadioGroup>
-            <RadioGroup label="Type of building:" isRequired={selectedTransport === "true"}>
-              <Radio value="1">Ground floor</Radio>
-              <Radio value="2">Walk up</Radio>
-              <Radio value="3">Elevator</Radio>
+            <RadioGroup
+              label="Type of building:"
+              isRequired={selectedTransport === "true"}
+              value={pickupTypeOfBuilding}
+              onChange={(e) => setPickupTypeOfBuilding(e.target.value)}
+            >
+              <Radio value="Ground Floor">Ground floor</Radio>
+              <Radio value="Walk Up">Walk up</Radio>
+              <Radio value="Elevator">Elevator</Radio>
             </RadioGroup>
-            <RadioGroup label="Loading dock:" isRequired={selectedTransport === "true"}>
-              <Radio value="1">Yes</Radio>
-              <Radio value="2">No</Radio>
+            <RadioGroup
+              label="Loading dock:"
+              isRequired={selectedTransport === "true"}
+              value={pickupLoadingDock}
+              onChange={(e) => setPickupLoadingDock(e.target.value)}
+            >
+              <Radio value="Yes">Yes</Radio>
+              <Radio value="No">No</Radio>
             </RadioGroup>
-            <RadioGroup label="Parking on side:" isRequired={selectedTransport === "true"}>
-              <Radio value="1">Yes</Radio>
-              <Radio value="2">No</Radio>
+            <RadioGroup
+              label="Parking on side:"
+              isRequired={selectedTransport === "true"}
+              value={pickupParkingOnSide}
+              onChange={(e) => setPickupParkingOnSide(e.target.value)}
+            >
+              <Radio value="Yes">Yes</Radio>
+              <Radio value="No">No</Radio>
             </RadioGroup>
             <div className="separator" />
             <h1 className="pickup-title">Primary Delivery Location</h1>
             <div className="flex w-full flex-wrap md:flex-nowrap gap-4">
-              <Input label="Street address" type="text" isRequired={selectedTransport === "true"} />
-              <Input label="City" type="text" isRequired={selectedTransport === "true"} />
+              <Input label="Street address" type="text" isRequired={selectedTransport === "true"} className="delivery-street-address" />
+              <Input label="City" type="text" isRequired={selectedTransport === "true"} className="delivery-city" />
             </div>
             <div className="flex w-full flex-wrap md:flex-nowrap gap-4">
-              <Input label="Street address 2" type="text" />
-              <Input label="State" type="text" isRequired={selectedTransport === "true"} />
+              <Input label="Street address 2" type="text" className="delivery-street-address-2" />
+              <Input label="State" type="text" isRequired={selectedTransport === "true"} className="delivery-state" />
             </div>
-            <Input label="ZIP code" type="text" isRequired={selectedTransport === "true"} />
-            <RadioGroup label="This is a:" isRequired={selectedTransport === "true"}>
-              <Radio value="1">Residence</Radio>
-              <Radio value="2">Commercial/Office</Radio>
-              <Radio value="3">Warehouse</Radio>
+            <Input label="ZIP code" type="text" isRequired={selectedTransport === "true"} className="delivery-zip" />
+            <RadioGroup
+              label="This is a:"
+              isRequired={selectedTransport === "true"}
+              value={deliveryThisIs}
+              onChange={(e) => setDeliveryThisIs(e.target.value)}
+            >
+              <Radio value="Residence">Residence</Radio>
+              <Radio value="Commercial/Office">Commercial/Office</Radio>
+              <Radio value="Warehouse">Warehouse</Radio>
             </RadioGroup>
-            <RadioGroup label="Type of building:" isRequired={selectedTransport === "true"}>
-              <Radio value="1">Ground floor</Radio>
-              <Radio value="2">Walk up</Radio>
-              <Radio value="3">Elevator</Radio>
+            <RadioGroup
+              label="Type of building:"
+              isRequired={selectedTransport === "true"}
+              value={deliveryTypeOfBuilding}
+              onChange={(e) => setDeliveryTypeOfBuilding(e.target.value)}
+            >
+              <Radio value="Ground floor">Ground floor</Radio>
+              <Radio value="Walk up">Walk up</Radio>
+              <Radio value="Elevator">Elevator</Radio>
             </RadioGroup>
             <div className="separator" />
             <RadioGroup
@@ -618,33 +720,52 @@ const Estimate = () => {
             </RadioGroup>
             <div className="extra-stop" style={{ display: `${selectedExtraStop == "true" ? "flex" : "none"}` }}>
               <div className="flex w-full flex-wrap md:flex-nowrap gap-4">
-                <Input label="Street address" type="text" isRequired={selectedExtraStop === "true"} />
-                <Input label="City" type="text" isRequired={selectedExtraStop === "true"} />
+                <Input label="Street address" type="text" isRequired={selectedExtraStop === "true"} className="extrastop-street-address" />
+                <Input label="City" type="text" isRequired={selectedExtraStop === "true"} className="extrastop-city" />
               </div>
               <div className="flex w-full flex-wrap md:flex-nowrap gap-4">
-                <Input label="Street address 2" type="text" />
-                <Input label="State" type="text" isRequired={selectedExtraStop === "true"} />
+                <Input label="Street address 2" type="text" className="extrastop-street-address-2" />
+                <Input label="State" type="text" isRequired={selectedExtraStop === "true"} className="extrastop-state" />
               </div>
-              <Input label="ZIP code" type="text" isRequired={selectedExtraStop === "true"} />
-              <RadioGroup label="This is a:" isRequired={selectedExtraStop === "true"}>
-                <Radio value="1">Residence</Radio>
-                <Radio value="2">Commercial/Office</Radio>
-                <Radio value="3">Warehouse</Radio>
+              <Input label="ZIP code" type="text" isRequired={selectedExtraStop === "true"} className="extrastop-zip" />
+              <RadioGroup
+                label="This is a:"
+                isRequired={selectedExtraStop === "true"}
+                value={extrastopThisIs}
+                onChange={(e) => {
+                  setExtrastopThisIs(e.target.value);
+                }}
+              >
+                <Radio value="Residence">Residence</Radio>
+                <Radio value="Commercial/Office">Commercial/Office</Radio>
+                <Radio value="Warehouse">Warehouse</Radio>
               </RadioGroup>
-              <RadioGroup label="Type of building:" isRequired={selectedExtraStop === "true"}>
-                <Radio value="1">Ground floor</Radio>
-                <Radio value="2">Walk up</Radio>
-                <Radio value="3">Elevator</Radio>
+              <RadioGroup
+                label="Type of building:"
+                isRequired={selectedExtraStop === "true"}
+                value={extrastopTypeOfBuilding}
+                onChange={(e) => {
+                  setExtrastopTypeOfBuilding(e.target.value);
+                }}
+              >
+                <Radio value="Ground floor">Ground floor</Radio>
+                <Radio value="Walk up">Walk up</Radio>
+                <Radio value="Elevator">Elevator</Radio>
               </RadioGroup>
             </div>
             <div className="separator" />
             <div>
               <p style={{ marginBottom: "1rem", color: "#a1a1aa" }}>When will the items be available for collection?</p>
-              <DatePicker className="max-w-[284px]" label="Available date" isRequired={selectedTransport === "true"} />
+              <DatePicker
+                className="max-w-[284px]"
+                label="Available date"
+                isRequired={selectedTransport === "true"}
+                onChange={(e) => setDatePickupAvailable(`${e.month}/${e.day}/${e.year}`)}
+              />
             </div>
             <div>
               <p style={{ marginBottom: "1rem", color: "#a1a1aa" }}>Do you have a required delivery deadline? (leave empty if not)</p>
-              <DatePicker className="max-w-[284px]" label="Deadline date" />
+              <DatePicker className="max-w-[284px]" label="Deadline date" onChange={(e) => setDateDeadline(`${e.month}/${e.day}/${e.year}`)} />
             </div>
             <div className="separator" />
             <RadioGroup
@@ -664,9 +785,17 @@ const Estimate = () => {
                 gap: ".8rem",
               }}
             >
-              <TimeInput label="Operating hours" isRequired={selectedOperatingHours === "true"} />
+              <TimeInput
+                label="Operating hours"
+                isRequired={selectedOperatingHours === "true"}
+                onChange={(e) => setStartOperatingHours(formatTime(e.hour, e.minute))}
+              />
               till
-              <TimeInput label="Operating hours" isRequired={selectedOperatingHours === "true"} />
+              <TimeInput
+                label="Operating hours"
+                isRequired={selectedOperatingHours === "true"}
+                onChange={(e) => setEndOperatingHours(formatTime(e.hour, e.minute))}
+              />
             </div>
             <div>
               <RadioGroup
@@ -680,20 +809,27 @@ const Estimate = () => {
               </RadioGroup>
               <div style={{ marginTop: "1.2rem", display: `${selectedTransportInsurance == "true" ? "block" : "none"}` }}>
                 <p style={{ marginBottom: ".75rem" }}>Could you please provide the declared value?</p>
-                <Input label="Declared value ($)" type="number" prefix="$" isRequired={selectedTransportInsurance === "true"} />
+                <Input
+                  label="Declared value ($)"
+                  type="number"
+                  prefix="$"
+                  isRequired={selectedTransportInsurance === "true"}
+                  min={0}
+                  className="declaredvalue-transit"
+                />
               </div>
             </div>
           </div>
           <div className="separator" />
-          <CheckboxGroup label="Please select the service(s) you require:" isRequired>
-            <Checkbox value="buenos-aires">Unpacking</Checkbox>
-            <Checkbox value="sydney">Installation</Checkbox>
-            <Checkbox value="san-francisco">Crate disposal</Checkbox>
-            <Checkbox value="london">Storage</Checkbox>
-            <Checkbox value="tokyo">Pedestal fabrication</Checkbox>
-            <Checkbox value="packing">Packing</Checkbox>
-            <Checkbox value="uninstallaion">Un-installation</Checkbox>
-            <Checkbox value="crating">Crating</Checkbox>
+          <CheckboxGroup label="Please select the service(s) you require:" onChange={(e) => setAdditionalServices(e)}>
+            <Checkbox value="Unpacking">Unpacking</Checkbox>
+            <Checkbox value="Installation">Installation</Checkbox>
+            <Checkbox value="Crate disposal">Crate disposal</Checkbox>
+            <Checkbox value="Storage">Storage</Checkbox>
+            <Checkbox value="Pedestal fabrication">Pedestal fabrication</Checkbox>
+            <Checkbox value="Packing">Packing</Checkbox>
+            <Checkbox value="Un-installation">Un-installation</Checkbox>
+            <Checkbox value="Crating">Crating</Checkbox>
           </CheckboxGroup>
           <div className="separator" />
           <div className="inventory">
@@ -724,7 +860,7 @@ const Estimate = () => {
             </RadioGroup>
             <div style={{ marginTop: "1.2rem", display: `${selectedStorageInsurance == "true" ? "block" : "none"}` }}>
               <p style={{ marginBottom: ".75rem" }}>Could you please provide the declared value?</p>
-              <Input label="Declared value ($)" type="number" prefix="$" />
+              <Input label="Declared value ($)" type="number" prefix="$" className="declaredvalue-storage" />
             </div>
           </div>
           <div className="separator" />
@@ -735,7 +871,7 @@ const Estimate = () => {
           <div className="separator" />
           <div className="files">
             <p>* Please attach any images and/or documents that provide additional details about the items included in this estimate.</p>
-            <input id="file" type="file" onChange={handleFileChange} />
+            <input id="file" type="file" onChange={handleFileChange} className="fileinputfield" />
           </div>
           <button className="calculate-estimate" onClick={calculateEstimate}>
             Calculate estimate
@@ -752,9 +888,14 @@ const Estimate = () => {
                   // You can now send `data` to your backend, etc.
                 }
               }}
+              className="submitFormBtn"
             >
               <img src={airplane} /> Submit form
             </button>
+            <div className="loader-circle">
+              <Ring size="30" stroke="3.5" bgOpacity="0" speed="1.5" color="white" />
+            </div>
+            <p className="form-submitted-text">Your form has been submitted. You can expect a response shortly. Thank you!</p>
           </div>
         </div>
       </div>

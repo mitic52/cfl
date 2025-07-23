@@ -230,15 +230,16 @@ section {
       }
 
       .sendFormToMail {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
         button {
           width: 90%;
           height: 3.5rem;
-          position: relative;
-          left: 50%;
-          transform: translateX(-50%);
           background: #35353575;
           color: #ffffffc9;
-          border: .15rem solid #8a8a8a4a;
+          border: 0.15rem solid #8a8a8a4a;
           font-size: 1.05rem;
           font-variation-settings: "wght" 600;
           border-radius: 0.8rem;
@@ -252,6 +253,18 @@ section {
           img {
             opacity: 0.8;
           }
+        }
+
+        .loader-circle {
+          display: none;
+        }
+
+        p {
+          font-size: 1.1rem;
+          font-variation-settings: "wght" 550;
+          width: 20rem;
+          line-height: 1.1rem;
+          display: none;
         }
       }
     }
