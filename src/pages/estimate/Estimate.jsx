@@ -426,6 +426,19 @@ const Estimate = () => {
 
   const [additionalServices, setAdditionalServices] = useState("");
 
+  const fileToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        // Remove the data:mime;base64, prefix
+        const base64 = reader.result.split(",")[1];
+        resolve(base64);
+      };
+      reader.onerror = (error) => reject(error);
+    });
+  };
+
   const validateAndCollectData = async () => {
     const formData = {
       clientsInfo: {},
@@ -533,17 +546,15 @@ const Estimate = () => {
       formData.declaredStorageValue = document.querySelector(".declaredvalue-storage").querySelector("input").value;
     }
 
+    let fileData = null;
+
     if (file) {
-      formData.uploadedFile = file;
-    }
-
-    const fullFormData = new FormData();
-
-    fullFormData.append("data", JSON.stringify(formData));
-
-    const fileInput = document.querySelector(".fileinputfield");
-    if (fileInput.files.length > 0) {
-      fullFormData.append("file", fileInput.files[0]);
+      const base64Content = await fileToBase64(file);
+      fileData = {
+        name: file.name,
+        content: base64Content,
+        type: file.type,
+      };
     }
 
     try {
@@ -554,9 +565,17 @@ const Estimate = () => {
         document.querySelector(".form-submitted-text").style.display = "block";
       }, 1500);
 
+      const requestBody = {
+        data: formData,
+        file: fileData,
+      };
+
       const response = await fetch("https://cflas-app.vercel.app/estimate", {
         method: "POST",
-        body: fullFormData,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
       });
 
       const result = await response.json();
